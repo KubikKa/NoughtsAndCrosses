@@ -1,8 +1,3 @@
-"""
-print("⭕✖️")
-"""
-
-
 #Field for 'Noughts and crosses' game
 field = [["1","2","3"],["4","5","6"],["7","8","9"]]
 
@@ -55,48 +50,95 @@ Now please answer these questions:
 print(text2)
 
 
-#Player's X turn
-while True:
-    print("\n> Player X, it's your turn! Select a number of the square where you want to place the cross.")
-    square = int(input("\n> I'll choose number: "))
+#Conditions
+def WhoIsTheWinner(field):
+    if field[0][0] == "X" and field[0][1] == "X" and field[0][2] == "X":
+        print("Player X is the winner!")
+    elif field[0][0] == "O" and field[0][1] == "O" and field[0][2] == "O":
+        print("Player O is the winner!") 
 
-    if square < 1 or square > 9:
-        print("\n> There is no square with this number! Please try again and select number from 1-9.")
-        continue
+    if field[1][0] == "X" and field[1][1] == "X" and field[1][2] == "X":
+        print("Player X is the winner!")
+    elif field[1][0] == "O" and field[1][1] == "O" and field[1][2] == "O":
+        print("Player O is the winner!")
 
-    coordinates = Coordinates(square)
-    row, column = coordinates 
+    if field[2][0] == "X" and field[2][1] == "X" and field[2][2] == "X":
+        print("Player X is the winner!")
+    elif field[2][0] == "O" and field[2][1] == "O" and field[2][2] == "O":
+        print("Player O is the winner!")
 
-
-    if field[row][column] == "X" or field[row][column] == "O":
-        print("\n> This square is already occupied! Please, choose another one.")
-        continue                             
-
-    else:
-        field[row][column] = "X"    
-        StylingTheField(field)
-        break
-
+    if field[0][0] == "X" and field[1][0] == "X" and field[2][0] == "X":
+        print("Player X is the winner!")  
+    elif field[0][0] == "O" and field[1][0] == "O" and field[2][0] == "O":
+        print("Player O is the winner!")  
     
+    if field[0][1] == "X" and field[1][1] == "X" and field[2][1] == "X":
+        print("Player X is the winner!")
+    elif field[0][1] == "O" and field[1][1] == "O" and field[2][1] == "O":
+        print("Player O is the winner!")
 
-#Player's O turn 
-while True:                                                                
-    print("\n> Player O, it's your turn! Select a number of the square where you want to place the nought.")
-    square = int(input("\n> I'll choose number: "))
+    if field[0][2] == "X" and field[1][2] == "X" and field[2][2] == "X":
+        print("Player X is the winner!")
+    elif field[0][2] == "O" and field[1][2] == "O" and field[2][2] == "O":
+        print("Player O is the winner!")
 
-    if square < 1 or square > 9:
-        print("\n> There is no square with this number! Please try again and select number from 1-9.")
-        continue
+    if field[0][0] == "X" and field[1][1] == "X" and field[2][2] == "X":
+        print("Player X is the winner!")
+    elif field[0][0] == "O" and field[1][1] == "O" and field[2][2] == "O":
+        print("Player O is the winner!")
 
-    coordinates = Coordinates(square)
-    row, column = coordinates 
+    if field[2][0] == "X" and field[1][1] == "X" and field[0][2] == "X":
+        print("Player X is the winner!")
+    elif field[2][0] == "O" and field[1][1] == "O" and field[0][2] == "O":
+        print("Player O is the winner!")
 
 
-    if field[row][column] == "X" or field[row][column] == "O":
-        print("\n> This square is already occupied! Please, choose another one.")
-        continue
+while True:
+    #Player's X turn
+    while True:
+        if WhoIsTheWinner(field):
+            break
+        print("\n> Player X, it's your turn! Select a number of the square where you want to place the cross.")
+        square = int(input("\n> I'll choose number: "))
 
-    else:
-        field[row][column] = "O"    
-        StylingTheField(field)
-        break
+        if square < 1 or square > 9:
+            print("\n> There is no square with this number! Please try again and select number from 1-9.")
+            continue
+
+        coordinates = Coordinates(square)
+        row, column = coordinates 
+
+
+        if field[row][column] == "X" or field[row][column] == "O":
+            print("\n> This square is already occupied! Please, choose another one.")
+            continue                             
+
+        else:
+            field[row][column] = "X"    
+            StylingTheField(field)
+            break
+
+        
+    #Player's O turn 
+    while True:
+        if WhoIsTheWinner(field):
+            break
+        print("\n> Player O, it's your turn! Select a number of the square where you want to place the nought.")
+        square = int(input("\n> I'll choose number: "))
+
+        if square < 1 or square > 9:
+            print("\n> There is no square with this number! Please try again and select number from 1-9.")
+            continue
+
+        coordinates = Coordinates(square)
+        row, column = coordinates 
+
+
+        if field[row][column] == "X" or field[row][column] == "O":
+            print("\n> This square is already occupied! Please, choose another one.")
+            continue
+
+        else:
+            field[row][column] = "O"    
+            StylingTheField(field)
+            break
