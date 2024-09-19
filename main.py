@@ -221,7 +221,7 @@ This is your field. Let the fun begin!
                 continue
             else:
                 field[row][column] = "O"
-                print("\n* Computer chose square number %s." %(square))
+                print("\n🖥️  Computer chose square number %s." %(square))
                 StylingTheField(field)
                 available_moves -= 1
                 break
