@@ -3,7 +3,7 @@ text1 = """
 
 > First, let's discuss the rules 📖:
 1. Decide who will be noughts (O) and who will be crosses (X).
-2. The player who chose crosses makes first move. You need to select a square (1-9) where you want to place the cross.
+2. The first move is made by the player who gets the crosses. You need to select a square (1-9) where you want to place the cross.
 3. Next, the noughts player chooses another square to place the nought in it.
 4. Both players continue to take turns to place their symbol in a square aiming to get three (X) or (O) in a row to win.
    Remember, you can not place your symbol in a square which is already occupied!
@@ -13,11 +13,6 @@ text1 = """
   Who do you want to play with?
 """
 print(text1)
-
-choice = int(input("I choose option number: "))
-
-#wybór komputer/przyjaciel/źle wklepał
-#wybór who's first
 
 import random
 
@@ -47,7 +42,7 @@ def Coordinates(square):
     return numbers.get(square)
 
 
-#Conditions
+#Winning conditions
 def WhoIsTheWinner(field):                                                                  #too long, consider how you can change it
     if field[0][0] == "X" and field[0][1] == "X" and field[0][2] == "X":
         print("Player X is the winner!")
@@ -107,129 +102,180 @@ def WhoIsTheWinner(field):                                                      
     return False
 
 
-available_moves = 9
+#Starting the game and choosing an opponent
+while True:
+    choice = int(input("I choose option number: "))
+    available_moves = 9
 
-
-#With a friend
-if choice == 1:
-    print("\n> Look, this is your field. Let the fun begin!")
-    StylingTheField(field)
-
-    while True:
-        #Player's X turn
+    #Playing with a friend
+    if choice == 1:
         while True:
-            print("\n> Player X, it's your turn!")
-            square = int(input("> I'll choose number: "))
-
-            if square < 1 or square > 9:
-                print("\n> There is no square with this number! Please try again and select number from 1-9.")
+            name1 = input("\nFirst player name: ")
+            name2 = input("Second player name: ")
+            names = [name1, name2]
+            if name1 == name2:
+                print("> Please, please enter two different names to avoid confusion.")
                 continue
-
-            coordinates = Coordinates(square)
-            row, column = coordinates 
-
-            if field[row][column] == "X" or field[row][column] == "O":
-                print("\n> This square is already occupied! Please, choose another one.")
-                continue   
             else:
-                field[row][column] = "X"    
-                StylingTheField(field)
-                available_moves -= 1
+                crosses_player = random.choice(names)
+                noughts_player = name1 if crosses_player == name2 else name2
+                break 
+
+        print("\n> Let the fun begin! Look, this is your field:")
+        StylingTheField(field)
+
+        while True:
+            #Player X's turn
+            while True:
+                print("\n> %s (X), it's your turn!" %(crosses_player))
+                square = int(input("> I'll choose number: "))
+
+                if square < 1 or square > 9:
+                    print("\n> There is no square with this number! Please try again and select number from 1-9.")
+                    continue
+
+                coordinates = Coordinates(square)
+                row, column = coordinates 
+
+                if field[row][column] == "X" or field[row][column] == "O":
+                    print("\n> This square is already occupied! Please, choose another one.")
+                    continue   
+                else:
+                    field[row][column] = "X"    
+                    StylingTheField(field)
+                    available_moves -= 1
+                    break
+
+            if WhoIsTheWinner(field):
+                break
+            elif available_moves == 0:
+                print("There is no winner!")
+                break
+            
+            #Player O's turn 
+            while True:
+                print("\n> %s (O), it's your turn!" %(noughts_player))
+                square = int(input("> I'll choose number: "))
+
+                if square < 1 or square > 9:
+                    print("\n> There is no square with this number! Please try again and select number from 1-9.")
+                    continue
+
+                coordinates = Coordinates(square)
+                row, column = coordinates 
+
+                if field[row][column] == "X" or field[row][column] == "O":
+                    print("\n> This square is already occupied! Please, choose another one.")
+                    continue
+                else:
+                    field[row][column] = "O"    
+                    StylingTheField(field)
+                    available_moves -= 1
+                    break
+
+            if WhoIsTheWinner(field):
                 break
 
 
-        if WhoIsTheWinner(field):
-            break
-        elif available_moves == 0:
-            print("There is no winner!")
-            break
+    #Playing with the computer
+    elif choice == 2:
+        name3 = input("> What's your name? ")
+        name4 = "Computer"
+        names2 = [name3, name4]
+        crosses_player2 = random.choice(names2)
+        noughts_player2 = name3 if crosses_player2 == name4 else name4
         
-
-        #Player's O turn 
-        while True:
-            print("\n> Player O, it's your turn!")
-            square = int(input("> I'll choose number: "))
-
-            if square < 1 or square > 9:
-                print("\n> There is no square with this number! Please try again and select number from 1-9.")
-                continue
-
-            coordinates = Coordinates(square)
-            row, column = coordinates 
-
-            if field[row][column] == "X" or field[row][column] == "O":
-                print("\n> This square is already occupied! Please, choose another one.")
-                continue
-            else:
-                field[row][column] = "O"    
-                StylingTheField(field)
-                available_moves -= 1
-                break
-
-
-        if WhoIsTheWinner(field):
-            break
-
-
-#With computer
-elif choice == 2:
-    text2 = """
+        text2 = """
 > Great, you chose a computer as your opponent!
-This is your field. Let the fun begin!
+Let the fun begin! This is your field: 
 """
-    print(text2)
-    StylingTheField(field)
+        print(text2)
+        StylingTheField(field)
 
-    while True:
-        #Player's X turn
         while True:
-            print("\n> Dear player, it's your turn!")
-            square = int(input("> I'll choose number: "))
+            #Player X's turn
+            while True:
+                if crosses_player2 == name3:
+                    print("\n> %s, it's your turn!" %(name3))
+                    square = int(input("> I'll choose number: "))
 
-            if square < 1 or square > 9:
-                print("\n> There is no square with this number! Please try again and select number from 1-9.")
-                continue
+                    if square < 1 or square > 9:
+                        print("\n> There is no square with this number! Please try again and select number from 1-9.")
+                        continue
 
-            coordinates = Coordinates(square)
-            row, column = coordinates 
+                    coordinates = Coordinates(square)
+                    row, column = coordinates 
 
-            if field[row][column] == "X" or field[row][column] == "O":
-                print("\n> This square is already occupied! Please, choose another one.")
-                continue                             
-            else:
-                field[row][column] = "X"    
-                StylingTheField(field)
-                available_moves -= 1
+                    if field[row][column] == "X" or field[row][column] == "O":
+                        print("\n> This square is already occupied! Please, choose another one.")
+                        continue                             
+                    else:
+                        field[row][column] = "X"    
+                        StylingTheField(field)
+                        available_moves -= 1
+                        break
+                else:
+                    square = random.randint(1, 9)
+
+                    coordinates = Coordinates(square)
+                    row, column = coordinates
+
+                    if field[row][column] == "X" or field[row][column] == "O":
+                        continue
+                    else:
+                        field[row][column] = "X"
+                        print("\n🖥️  Computer chose square number %s." %(square))
+                        StylingTheField(field)
+                        available_moves -= 1
+                        break
+
+            if WhoIsTheWinner(field):
+                break
+            elif available_moves == 0:
+                print("There is no winner!")
+                break
+
+            #Player O's turn
+            while True:
+                if noughts_player2 == name3:
+                    print("\n> %s, it's your turn!" %(name3))
+                    square = int(input("> I'll choose number: "))
+
+                    if square < 1 or square > 9:
+                        print("\n> There is no square with this number! Please try again and select number from 1-9.")
+                        continue
+
+                    coordinates = Coordinates(square)
+                    row, column = coordinates 
+
+                    if field[row][column] == "X" or field[row][column] == "O":
+                        print("\n> This square is already occupied! Please, choose another one.")
+                        continue                             
+                    else:
+                        field[row][column] = "O"    
+                        StylingTheField(field)
+                        available_moves -= 1
+                        break 
+                else:
+                    square = random.randint(1, 9)
+
+                    coordinates = Coordinates(square)
+                    row, column = coordinates
+
+                    if field[row][column] == "X" or field[row][column] == "O":
+                        continue
+                    else:
+                        field[row][column] = "O"
+                        print("\n🖥️  Computer chose square number %s." %(square))
+                        StylingTheField(field)
+                        available_moves -= 1
+                        break
+        
+            if WhoIsTheWinner(field):
                 break
 
 
-        if WhoIsTheWinner(field):
-            break
-        elif available_moves == 0:
-            print("There is no winner!")
-            break
-
-
-        #Computer's turn
-        while True:
-            square = random.randint(1, 9)
-
-            coordinates = Coordinates(square)
-            row, column = coordinates
-
-            if field[row][column] == "X" or field[row][column] == "O":
-                continue
-            else:
-                field[row][column] = "O"
-                print("\n🖥️  Computer chose square number %s." %(square))
-                StylingTheField(field)
-                available_moves -= 1
-                break
-    
-        if WhoIsTheWinner(field):
-            break
-
-
-else:
-    print("Upsi, I don't understand, please try again!")
-# dokończ
+    else:
+        print("Oopsi, make sure you chose the right number!")
+        continue
+    break
