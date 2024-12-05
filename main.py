@@ -1,16 +1,3 @@
-text1 = """
-> Hi! You're playing a game called 'Noughts and crosses'.
-
-> First, let's discuss the rules 📖:
-1. Enter your name (or names if you are playing with a friend) and the system will assign symbols - cross (x) or nought (O).
-2. The first move is made by the player who gets the crosses. You need to select a square (1-9) where you want to place the cross.
-3. Next, the noughts player chooses another square to place the nought in it.
-4. Both players continue to take turns to place their symbol in a square aiming to get three (X) or (O) in a row to win.
-   Remember, you can not place your symbol in a square which is already occupied!
-5. The three in a row can be in a horizontal, vertical or diagonal line.
-"""
-print(text1)
-
 import random
 
 # Field for 'Noughts and crosses' game
@@ -46,49 +33,29 @@ def Coordinates(square):
 
 
 # Winning conditions
-def WhoIsTheWinner(field):                                                                  #too long, consider how you can change it
-    if field[0][0] == "X" and field[0][1] == "X" and field[0][2] == "X":
+def WhoIsTheWinner(field):
+    # rows
+    for row in field:
+        if row[0] == row[1] == row[2] == "X":
+            print("Player X is the winner!")
+            return True
+        elif row[0] == row[1] == row[2] == "O":
+            print("Player O is the winner!")
+            return True
+
+    # columns
+    col1 = [wiersz[0] for wiersz in field]
+    col2 = [wiersz[1] for wiersz in field]
+    col3 = [wiersz[2] for wiersz in field]
+
+    if col1 == col2 == col3 == "X":
         print("Player X is the winner!")
         return True
-    elif field[0][0] == "O" and field[0][1] == "O" and field[0][2] == "O":
+    elif col1 == col2 == col3 == "O":
         print("Player O is the winner!")
         return True
 
-    if field[1][0] == "X" and field[1][1] == "X" and field[1][2] == "X":
-        print("Player X is the winner!")
-        return True
-    elif field[1][0] == "O" and field[1][1] == "O" and field[1][2] == "O":
-        print("Player O is the winner!")
-        return True
-
-    if field[2][0] == "X" and field[2][1] == "X" and field[2][2] == "X":
-        print("Player X is the winner!")
-        return True
-    elif field[2][0] == "O" and field[2][1] == "O" and field[2][2] == "O":
-        print("Player O is the winner!")
-        return True
-
-    if field[0][0] == "X" and field[1][0] == "X" and field[2][0] == "X":
-        print("Player X is the winner!")
-        return True  
-    elif field[0][0] == "O" and field[1][0] == "O" and field[2][0] == "O":
-        print("Player O is the winner!")
-        return True
-    
-    if field[0][1] == "X" and field[1][1] == "X" and field[2][1] == "X":
-        print("Player X is the winner!")
-        return True
-    elif field[0][1] == "O" and field[1][1] == "O" and field[2][1] == "O":
-        print("Player O is the winner!")
-        return True
-
-    if field[0][2] == "X" and field[1][2] == "X" and field[2][2] == "X":
-        print("Player X is the winner!")
-        return True
-    elif field[0][2] == "O" and field[1][2] == "O" and field[2][2] == "O":
-        print("Player O is the winner!")
-        return True
-
+    # diagonals
     if field[0][0] == "X" and field[1][1] == "X" and field[2][2] == "X":
         print("Player X is the winner!")
         return True
@@ -102,26 +69,26 @@ def WhoIsTheWinner(field):                                                      
     elif field[2][0] == "O" and field[1][1] == "O" and field[0][2] == "O":
         print("Player O is the winner!")
         return True
+    
     return False
 
 
 # Asking for names and choosing order
 def NameAndOrder():
     while True:
-        choice2 = input("\n> Do you want to decide who will make the first move? \n(Answer yes/no, if you do not want to make this decision, the computer will choose the order): ").lower()
-        if choice2 == "no":
+        choice2 = input("\n> Do you want to decide who will make the first move? \n(Answer Y/N, if you do not want to make this decision, the computer will choose the order): ").lower()
+        if choice2 == "n":
             name1 = input("\nFirst player name: ")
             name2 = input("Second player name: ")
-            names = [name1, name2]
             if name1 == name2:
                 print("> Please, enter two different names to avoid confusion.")
                 continue
             else:
-                crosses_player = random.choice(names)
+                crosses_player = random.choice(name1, name2)
                 noughts_player = name1 if crosses_player == name2 else name2
                 return crosses_player, noughts_player
             
-        elif choice2 == "yes":
+        elif choice2 == "y":
             crosses_player = input("\nCrosses player name: ")
             noughts_player = input("Noughts player name: ")
             if crosses_player == noughts_player:
@@ -175,10 +142,10 @@ def Computer(symbol):
 # Choose whether you want to play again
 def PlayAgain():
     while True:
-        game = input("\n> Do you want to play again? (Answer yes/no): ").lower()
-        if game == "yes":
+        game = input("\n> Do you want to play again? (Answer Y/N): ").lower()
+        if game == "y":
             return True 
-        elif game == "no":
+        elif game == "n":
             return False
         else:
             print("> Make sure you spell your answer correctly!")
@@ -221,12 +188,11 @@ while True:
         while True:
             player_name = input("\nWhat's your name? ")
             computer_name = "Computer"
-            names = [player_name, computer_name]
             if player_name == computer_name:
                 print("> Please, please enter two different names to avoid confusion.")
                 continue
             else:
-                crosses_player = random.choice(names)
+                crosses_player = random.choice(player_name, computer_name)
                 noughts_player = player_name if crosses_player == computer_name else computer_name
                 break
         
