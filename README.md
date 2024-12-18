@@ -9,8 +9,3 @@ Hi! This is a game called 'Noughts and crosses'.
 3. Both players continue to take turns to place their symbol in a square aiming to get three (X) or (O) in a row to win.
    Remember, you can not place your symbol in a square which is already occupied!
 4. The three in a row can be in a horizontal, vertical or diagonal line.
-
-
-# ToDo list:
-1. def WhoIsTheWinner(field)
-2. statements

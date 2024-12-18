@@ -34,7 +34,7 @@ def Coordinates(square):
 
 # Winning conditions
 def WhoIsTheWinner(field):
-    # rows
+    # checking rows
     for row in field:
         if row[0] == row[1] == row[2] == "X":
             print("Player X is the winner!")
@@ -43,19 +43,17 @@ def WhoIsTheWinner(field):
             print("Player O is the winner!")
             return True
 
-    # columns
-    col1 = [wiersz[0] for wiersz in field]
-    col2 = [wiersz[1] for wiersz in field]
-    col3 = [wiersz[2] for wiersz in field]
+    # checking columns
+    columns = [[row[0] for row in field], [row[1] for row in field], [row[2] for row in field]]
+    for i in range(len(columns)):
+        if columns[i][0] == columns[i][1] == columns[i][2] == "X":
+            print("Player X is the winner!")
+            return True
+        elif columns[i][0] == columns[i][1] == columns[i][2] == "O":
+            print("Player O is the winner!")
+            return True
 
-    if col1 == col2 == col3 == "X":
-        print("Player X is the winner!")
-        return True
-    elif col1 == col2 == col3 == "O":
-        print("Player O is the winner!")
-        return True
-
-    # diagonals
+    # checking diagonals
     if field[0][0] == "X" and field[1][1] == "X" and field[2][2] == "X":
         print("Player X is the winner!")
         return True
@@ -76,27 +74,29 @@ def WhoIsTheWinner(field):
 # Asking for names and choosing order
 def NameAndOrder():
     while True:
-        choice2 = input("\n> Do you want to decide who will make the first move? \n(Answer Y/N, if you do not want to make this decision, the computer will choose the order): ").lower()
-        if choice2 == "n":
-            name1 = input("\nFirst player name: ")
-            name2 = input("Second player name: ")
-            if name1 == name2:
-                print("> Please, enter two different names to avoid confusion.")
-                continue
-            else:
-                crosses_player = random.choice(name1, name2)
-                noughts_player = name1 if crosses_player == name2 else name2
+        try:   
+            choice2 = input("\n> If you want to decide who makes the move, press 1, if not, press 2: ").lower()         
+            if choice2 == "2":
+                name1 = input("\nFirst player name: ")
+                name2 = input("Second player name: ")
+                names = [name1, name2]
+                if name1 == name2:
+                    print("> Please, enter two different names to avoid confusion.")
+                    continue
+                else:
+                    crosses_player = random.choice(names)
+                    noughts_player = name1 if crosses_player == name2 else name2
+                    return crosses_player, noughts_player
+                
+            elif choice2 == "1":
+                crosses_player = input("\nCrosses player name: ")
+                noughts_player = input("Noughts player name: ")
+                if crosses_player == noughts_player:
+                    print("> Please, enter two different names to avoid confusion.")
+                    continue
                 return crosses_player, noughts_player
-            
-        elif choice2 == "y":
-            crosses_player = input("\nCrosses player name: ")
-            noughts_player = input("Noughts player name: ")
-            if crosses_player == noughts_player:
-                print("> Please, enter two different names to avoid confusion.")
-                continue
-            return crosses_player, noughts_player
         
-        else:
+        except:
             print("Make sure you spell your answer correctly!")
 
 
@@ -104,22 +104,22 @@ def NameAndOrder():
 def Player_turn(player_name, symbol):
     while True:
         print("\n> %s (%s), it's your turn!" %(player_name, symbol))
-        square = int(input("> I'll choose number: "))
 
-        if square < 1 or square > 9:
+        try:
+            square = int(input("> I'll choose number: "))
+            coordinates = Coordinates(square)
+            row, column = coordinates 
+
+            if field[row][column] == "X" or field[row][column] == "O":
+                print("\n> This square is already occupied! Please, choose another one.")
+                continue   
+            else:
+                field[row][column] = symbol    
+                StylingTheField(field)
+                break
+        except:
             print("\n> There is no square with this number! Please try again and select number from 1-9.")
             continue
-
-        coordinates = Coordinates(square)
-        row, column = coordinates 
-
-        if field[row][column] == "X" or field[row][column] == "O":
-            print("\n> This square is already occupied! Please, choose another one.")
-            continue   
-        else:
-            field[row][column] = symbol    
-            StylingTheField(field)
-            break
 
 
 # Computer's turn
@@ -143,11 +143,12 @@ def Computer(symbol):
 def PlayAgain():
     while True:
         game = input("\n> Do you want to play again? (Answer Y/N): ").lower()
-        if game == "y":
-            return True 
-        elif game == "n":
-            return False
-        else:
+        try:
+            if game == "y":
+                return True 
+            elif game == "n":
+                return False
+        except:
             print("> Make sure you spell your answer correctly!")
 
 
@@ -158,75 +159,79 @@ while True:
   Who do you want to play with?
 """
     print(text2)
-    choice = int(input("> I choose option number: "))
+    
     field = ClearField()
     available_moves = 9
-# Playing with a friend
-    if choice == 1:
-        crosses_player, noughts_player = NameAndOrder()
-        print("\n> Let the fun begin! Look, this is your field:")
-        StylingTheField(field)
 
-        while True:
-            Player_turn(crosses_player, "X")
-            available_moves -= 1
+    try:
+        choice = int(input("> I choose option number: "))
+    # Playing with a friend
+        if choice == 1:
+            crosses_player, noughts_player = NameAndOrder()
+            print("\n> Look, this is your field:")
+            StylingTheField(field)
 
-            if WhoIsTheWinner(field):
-                break
-            elif available_moves == 0:
-                print("There is no winner!")
-                break
-
-            Player_turn(noughts_player, "O")
-            available_moves -= 1
-
-            if WhoIsTheWinner(field):
-                break
-
-# Playing with the computer
-    elif choice == 2:
-        while True:
-            player_name = input("\nWhat's your name? ")
-            computer_name = "Computer"
-            if player_name == computer_name:
-                print("> Please, please enter two different names to avoid confusion.")
-                continue
-            else:
-                crosses_player = random.choice(player_name, computer_name)
-                noughts_player = player_name if crosses_player == computer_name else computer_name
-                break
-        
-        text3 = """
-> Great, you chose a computer as your opponent!
-Let the fun begin! This is your field: 
-"""
-        print(text3)
-        StylingTheField(field)
-
-        while True:
-            if crosses_player == computer_name:
-                Computer("X")
-            else:
+            while True:
                 Player_turn(crosses_player, "X")
-            available_moves -= 1
+                available_moves -= 1
 
-            if WhoIsTheWinner(field):
-                break
-            elif available_moves == 0:
-                print("There is no winner!")
-                break
+                if WhoIsTheWinner(field):
+                    break
+                elif available_moves == 0:
+                    print("There is no winner!")
+                    break
 
-            if noughts_player == computer_name:
-                Computer("O") 
-            else:
                 Player_turn(noughts_player, "O")
-            available_moves -= 1
-        
-            if WhoIsTheWinner(field):
-                break
+                available_moves -= 1
+
+                if WhoIsTheWinner(field):
+                    break
+
+    # Playing with the computer
+        elif choice == 2:
+            while True:
+                player_name = input("\nWhat's your name? ")
+                computer_name = "Computer"
+                names = [player_name, computer_name]
+                if player_name == computer_name:
+                    print("> Please, please enter two different names to avoid confusion.")
+                    continue
+                else:
+                    crosses_player = random.choice(names)
+                    noughts_player = player_name if crosses_player == computer_name else computer_name
+                    break
+            
+            text3 = """
+    > Great, you chose a computer as your opponent!
+    This is your field: 
+    """
+            print(text3)
+            StylingTheField(field)
+
+            while True:
+                if crosses_player == computer_name:
+                    Computer("X")
+                else:
+                    Player_turn(crosses_player, "X")
+                available_moves -= 1
+
+                if WhoIsTheWinner(field):
+                    break
+                elif available_moves == 0:
+                    print("There is no winner!")
+                    break
+
+                if noughts_player == computer_name:
+                    Computer("O") 
+                else:
+                    Player_turn(noughts_player, "O")
+                available_moves -= 1
+            
+                if WhoIsTheWinner(field):
+                    break
 
 # Invalid input
-    else:
+    except:
         print("> Oopsi, make sure you chose the right number!")
         continue
 
