@@ -1,10 +1,7 @@
 import random
 
+
 # Field for 'Noughts and crosses' game
-field = [["1","2","3"],["4","5","6"],["7","8","9"]]
-
-
-# Clear field - to reset the old one
 def ClearField():
     field = [["1","2","3"],["4","5","6"],["7","8","9"]]
     return field
@@ -37,35 +34,35 @@ def WhoIsTheWinner(field):
     # checking rows
     for row in field:
         if row[0] == row[1] == row[2] == "X":
-            print("Player X is the winner!")
+            print("Player %s is the winner!" %crosses_player)
             return True
         elif row[0] == row[1] == row[2] == "O":
-            print("Player O is the winner!")
+            print("Player %s is the winner!" %noughts_player)
             return True
 
     # checking columns
     columns = [[row[0] for row in field], [row[1] for row in field], [row[2] for row in field]]
     for i in range(len(columns)):
         if columns[i][0] == columns[i][1] == columns[i][2] == "X":
-            print("Player X is the winner!")
+            print("Player %s is the winner!" %crosses_player)
             return True
         elif columns[i][0] == columns[i][1] == columns[i][2] == "O":
-            print("Player O is the winner!")
+            print("Player %s is the winner!" %noughts_player)
             return True
 
     # checking diagonals
     if field[0][0] == "X" and field[1][1] == "X" and field[2][2] == "X":
-        print("Player X is the winner!")
+        print("Player %s is the winner!" %crosses_player)
         return True
     elif field[0][0] == "O" and field[1][1] == "O" and field[2][2] == "O":
-        print("Player O is the winner!")
+        print("Player %s is the winner!" %noughts_player)
         return True
 
     if field[2][0] == "X" and field[1][1] == "X" and field[0][2] == "X":
-        print("Player X is the winner!")
+        print("Player %s is the winner!" %crosses_player)
         return True
     elif field[2][0] == "O" and field[1][1] == "O" and field[0][2] == "O":
-        print("Player O is the winner!")
+        print("Player %s is the winner!" %noughts_player)
         return True
     
     return False
@@ -95,9 +92,12 @@ def NameAndOrder():
                     print("> Please, enter two different names to avoid confusion.")
                     continue
                 return crosses_player, noughts_player
+            
+            else:
+                raise ValueError
         
         except:
-            print("Make sure you spell your answer correctly!")
+            print("\n> Make sure you spell your answer correctly!")
 
 
 # Each player's turn
@@ -143,11 +143,15 @@ def Computer(symbol):
 def PlayAgain():
     while True:
         game = input("\n> Do you want to play again? (Answer Y/N): ").lower()
+        
         try:
             if game == "y":
                 return True 
             elif game == "n":
                 return False
+            else:
+                raise ValueError
+        
         except:
             print("> Make sure you spell your answer correctly!")
 
@@ -160,12 +164,11 @@ while True:
 """
     print(text2)
     
-    field = ClearField()
-    available_moves = 9
-
     try:
+        field = ClearField()
+        available_moves = 9
         choice = int(input("> I choose option number: "))
-    # Playing with a friend
+        # Playing with a friend
         if choice == 1:
             crosses_player, noughts_player = NameAndOrder()
             print("\n> Look, this is your field:")
@@ -187,7 +190,7 @@ while True:
                 if WhoIsTheWinner(field):
                     break
 
-    # Playing with the computer
+        # Playing with the computer
         elif choice == 2:
             while True:
                 player_name = input("\nWhat's your name? ")
@@ -230,7 +233,10 @@ while True:
                 if WhoIsTheWinner(field):
                     break
 
-# Invalid input
+        else:
+            raise ValueError
+
+    # Invalid input
     except:
         print("> Oopsi, make sure you chose the right number!")
         continue
