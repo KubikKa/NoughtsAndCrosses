@@ -143,7 +143,7 @@ def Computer(symbol):
 def PlayAgain():
     while True:
         game = input("\n> Do you want to play again? (Answer Y/N): ").lower()
-        
+
         try:
             if game == "y":
                 return True 
@@ -168,7 +168,8 @@ while True:
         field = ClearField()
         available_moves = 9
         choice = int(input("> I choose option number: "))
-        # Playing with a friend
+
+        # playing with a friend
         if choice == 1:
             crosses_player, noughts_player = NameAndOrder()
             print("\n> Look, this is your field:")
@@ -190,7 +191,7 @@ while True:
                 if WhoIsTheWinner(field):
                     break
 
-        # Playing with the computer
+        # playing with the computer
         elif choice == 2:
             while True:
                 player_name = input("\nWhat's your name? ")
@@ -236,7 +237,7 @@ while True:
         else:
             raise ValueError
 
-    # Invalid input
+    # invalid input
     except:
         print("> Oopsi, make sure you chose the right number!")
         continue
