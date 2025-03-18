@@ -103,7 +103,7 @@ def NameAndOrder():
 # Each player's turn
 def Player_turn(player_name, symbol):
     while True:
-        print("\n> %s (%s), it's your turn!" %(player_name, symbol))
+        print("\n> It's %s's (%s) turn!" %(player_name, symbol))
 
         try:
             square = int(input("> I'll choose number: "))
