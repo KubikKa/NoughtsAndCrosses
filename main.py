@@ -16,7 +16,6 @@ def StylingTheField(field):
     print("---.---.---")
     print(" " + field[2][0] + " | " + field[2][1] + " | " + field[2][2] + " ")
     print("")
-    return 
 
 
 # Changing coordinates of the field's squares into simple numbers
@@ -31,40 +30,28 @@ def Coordinates(square):
 
 # Winning conditions
 def WhoIsTheWinner(field):
+    winners = {"X": crosses_player, "O": noughts_player}
     # checking rows
     for row in field:
-        if row[0] == row[1] == row[2] == "X":
-            print("Player %s is the winner!" %crosses_player)
-            return True
-        elif row[0] == row[1] == row[2] == "O":
-            print("Player %s is the winner!" %noughts_player)
+        if row[0] == row[1] == row[2] in winners:
+            print("%s is the winner!" %winners[row[2]])
             return True
 
     # checking columns
     columns = [[row[0] for row in field], [row[1] for row in field], [row[2] for row in field]]
     for i in range(len(columns)):
-        if columns[i][0] == columns[i][1] == columns[i][2] == "X":
-            print("Player %s is the winner!" %crosses_player)
-            return True
-        elif columns[i][0] == columns[i][1] == columns[i][2] == "O":
-            print("Player %s is the winner!" %noughts_player)
+        if columns[i][0] == columns[i][1] == columns[i][2] in winners:
+            print("%s is the winner!" %winners[columns[i][2]])
             return True
 
     # checking diagonals
-    if field[0][0] == "X" and field[1][1] == "X" and field[2][2] == "X":
-        print("Player %s is the winner!" %crosses_player)
-        return True
-    elif field[0][0] == "O" and field[1][1] == "O" and field[2][2] == "O":
-        print("Player %s is the winner!" %noughts_player)
+    if field[0][0] == field[1][1] == field[2][2] in winners:
+        print("%s is the winner!" %winners[field[2][2]])
         return True
 
-    if field[2][0] == "X" and field[1][1] == "X" and field[0][2] == "X":
-        print("Player %s is the winner!" %crosses_player)
-        return True
-    elif field[2][0] == "O" and field[1][1] == "O" and field[0][2] == "O":
-        print("Player %s is the winner!" %noughts_player)
-        return True
-    
+    if field[2][0] == field[1][1] == field[0][2] in winners:
+        print("%s is the winner!" %winners[field[0][2]])
+        return True    
     return False
 
 
@@ -103,12 +90,10 @@ def NameAndOrder():
 # Each player's turn
 def Player_turn(player_name, symbol):
     while True:
-        print("\n> It's %s's (%s) turn!" %(player_name, symbol))
-
+        print("\n> %s (%s), it's your turn!" %(player_name, symbol))
         try:
             square = int(input("> I'll choose number: "))
-            coordinates = Coordinates(square)
-            row, column = coordinates 
+            row, column = Coordinates(square)
 
             if field[row][column] == "X" or field[row][column] == "O":
                 print("\n> This square is already occupied! Please, choose another one.")
@@ -126,9 +111,7 @@ def Player_turn(player_name, symbol):
 def Computer(symbol):
     while True:
         square = random.randint(1, 9)
-
-        coordinates = Coordinates(square)
-        row, column = coordinates
+        row, column = Coordinates(square)
 
         if field[row][column] == "X" or field[row][column] == "O":
             continue
@@ -143,16 +126,11 @@ def Computer(symbol):
 def PlayAgain():
     while True:
         game = input("\n> Do you want to play again? (Answer Y/N): ").lower()
-
-        try:
-            if game == "y":
-                return True 
-            elif game == "n":
-                return False
-            else:
-                raise ValueError
-        
-        except:
+        if game == "y":
+            return True 
+        elif game == "n":
+            return False
+        else:
             print("> Make sure you spell your answer correctly!")
 
 
@@ -182,7 +160,7 @@ while True:
                 if WhoIsTheWinner(field):
                     break
                 elif available_moves == 0:
-                    print("There is no winner!")
+                    print("It's a draw!")
                     break
 
                 Player_turn(noughts_player, "O")
@@ -198,17 +176,16 @@ while True:
                 computer_name = "Computer"
                 names = [player_name, computer_name]
                 if player_name == computer_name:
-                    print("> Please, please enter two different names to avoid confusion.")
+                    print("> Please, enter two different names to avoid confusion.")
                     continue
                 else:
                     crosses_player = random.choice(names)
                     noughts_player = player_name if crosses_player == computer_name else computer_name
                     break
             
-            text3 = """
-    > Great, you chose a computer as your opponent!
-    This is your field: 
-    """
+            text3 = """> Great, you chose a computer as your opponent!
+This is your field: 
+"""
             print(text3)
             StylingTheField(field)
 
@@ -222,7 +199,7 @@ while True:
                 if WhoIsTheWinner(field):
                     break
                 elif available_moves == 0:
-                    print("There is no winner!")
+                    print("It's a draw!")
                     break
 
                 if noughts_player == computer_name:
@@ -239,7 +216,7 @@ while True:
 
     # invalid input
     except:
-        print("> Oopsi, make sure you chose the right number!")
+        print("> Oops, make sure you chose the right number!")
         continue
 
     if not PlayAgain():
