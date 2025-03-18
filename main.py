@@ -87,39 +87,30 @@ def NameAndOrder():
             print("\n> Make sure you spell your answer correctly!")
 
 
-# Each player's turn
-def Player_turn(player_name, symbol):
+# Selection of field squares
+def Move(player_name, computer_name, symbol):
     while True:
-        print("\n> %s (%s), it's your turn!" %(player_name, symbol))
         try:
-            square = int(input("> I'll choose number: "))
+            if player_name:
+                print("\n> %s (%s), it's your turn!" %(player_name, symbol))
+                square = int(input("> I'll choose number: "))
+            else:
+                square = random.randint(1, 9)
+                
             row, column = Coordinates(square)
 
             if field[row][column] == "X" or field[row][column] == "O":
-                print("\n> This square is already occupied! Please, choose another one.")
-                continue   
+                if player_name:
+                    print("\n> This square is already occupied! Please, choose another one.")
+                continue
             else:
-                field[row][column] = symbol    
+                if computer_name:
+                    print("\n🖥️  Computer chose square number %s." %(square))
+                field[row][column] = symbol   
                 StylingTheField(field)
                 break
         except:
             print("\n> There is no square with this number! Please try again and select number from 1-9.")
-            continue
-
-
-# Computer's turn
-def Computer(symbol):
-    while True:
-        square = random.randint(1, 9)
-        row, column = Coordinates(square)
-
-        if field[row][column] == "X" or field[row][column] == "O":
-            continue
-        else:
-            field[row][column] = symbol
-            print("\n🖥️  Computer chose square number %s." %(square))
-            StylingTheField(field)
-            break
 
 
 # Choose whether you want to play again
@@ -154,7 +145,7 @@ while True:
             StylingTheField(field)
 
             while True:
-                Player_turn(crosses_player, "X")
+                Move(crosses_player, "", "X")
                 available_moves -= 1
 
                 if WhoIsTheWinner(field):
@@ -163,7 +154,7 @@ while True:
                     print("It's a draw!")
                     break
 
-                Player_turn(noughts_player, "O")
+                Move(noughts_player, "", "O")
                 available_moves -= 1
 
                 if WhoIsTheWinner(field):
@@ -191,9 +182,9 @@ This is your field:
 
             while True:
                 if crosses_player == computer_name:
-                    Computer("X")
+                    Move("", computer_name, "X")
                 else:
-                    Player_turn(crosses_player, "X")
+                    Move(crosses_player, "", "X")
                 available_moves -= 1
 
                 if WhoIsTheWinner(field):
@@ -203,9 +194,9 @@ This is your field:
                     break
 
                 if noughts_player == computer_name:
-                    Computer("O") 
+                    Move("", computer_name, "O")
                 else:
-                    Player_turn(noughts_player, "O")
+                    Move(noughts_player, "", "O")
                 available_moves -= 1
             
                 if WhoIsTheWinner(field):
