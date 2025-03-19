@@ -175,7 +175,7 @@ while True:
                     break
             
             text3 = """> Great, you chose a computer as your opponent!
-This is your field: 
+  This is your field: 
 """
             print(text3)
             StylingTheField(field)
@@ -205,7 +205,6 @@ This is your field:
         else:
             raise ValueError
 
-    # invalid input
     except:
         print("> Oops, make sure you chose the right number!")
         continue
