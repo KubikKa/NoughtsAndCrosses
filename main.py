@@ -21,7 +21,7 @@ def ClearField():
 
 # Field styling
 """a bit repetitive, could be put in a loop. You can use \n instead of printing black lines [n]"""
-"""unhelpful function name, 'style' could be understood as change how it looks, be the function displays the field [n]"""
+"""unhelpful function name, 'style' could be understood as 'change how it looks', but the function displays the field [n]"""
 def StylingTheField(field):
     print("")
     print(" " + field[0][0] + " | " + field[0][1] + " | " + field[0][2] + " ")
@@ -34,6 +34,7 @@ def StylingTheField(field):
 
 # Changing coordinates of the field's squares into simple numbers
 """good use of dictionaries [+], but name could be more descriptive (eg. get_coordinates) [n]. Why is is called square?"""
+"""is this function even needed? [s]"""
 def Coordinates(square):
     numbers = { 
         1: [0,0], 2: [0,1], 3: [0,2], 
@@ -275,7 +276,7 @@ while True:
 wnioski:
 [+]: 5
 [n]: 17
-[s]: 8
+[s]: 9
 [m]: 2
 
 1. tworzysz jakąś strukturę danych i zamiast się jej trzymać, to gdy napotkujesz jakiś problem, konwertujesz ją do innej
