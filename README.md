@@ -1,5 +1,4 @@
 # NoughtsAndCrosses
-Game Made In Python
 
 Hi! This is a game called 'Noughts and crosses'.
 
@@ -9,3 +8,10 @@ Hi! This is a game called 'Noughts and crosses'.
 3. Both players continue to take turns to place their symbol in a square aiming to get three (X) or (O) in a row to win.
    The three in a row can be in a horizontal, vertical or diagonal line.
 4. Remember, you can not place your symbol in a square which is already occupied!
+
+# To-Do List:
+## Short term:
+* Resolve minor issues and bugs
+
+## Medium/Long term:
+* Add the option to play against AI
