@@ -33,71 +33,55 @@ def get_coordinates(square):
 # Winning conditions
 def who_is_the_winner(board):
     winners = {"X": crosses_player, "O": noughts_player}
-    # checking rows
-    for row in board:
-        if row[0] == row[1] == row[2] in winners:
-            print("%s is the winner!" %winners[row[2]])
-            return True
 
-    # checking columns
-    """
-    good use of string comprehension [+]
-    but is it necessary?
-    you iterate unnecessary number of times, adding overhead
-    creating unnecessary variables (columns) [m]
-    """
-    columns = [[row[0] for row in board], [row[1] for row in board], [row[2] for row in board]]
-    """
-    The whole for loop here is basically the same as in the part that checks rows, it could be put in a function
-    to avoid repetition [n]
-    """
-    for i in range(len(columns)):
-        if columns[i][0] == columns[i][1] == columns[i][2] in winners:
-            print("%s is the winner!" %winners[columns[i][2]])
+    for i in range(3):
+        # checking rows
+        if board[i][0] == board[i][1] == board[i][2] and board[i][0] in winners:
+            print("%s is the winner!" %winners[board[i][0]])
             return True
-
+        #checking columns
+        if board[0][i] == board[1][i] == board[2][i] and board[0][i] in winners:
+            print("%s is the winner!" %winners[board[0][i]])
+            return True
+    
     # checking diagonals
-    """Could be put into one if statement with the use of 'or' operator [n]"""
-    if board[0][0] == board[1][1] == board[2][2] in winners:
-        print("%s is the winner!" %winners[board[2][2]])
+    if board[0][0] == board[1][1] == board[2][2] and board[0][0] in winners:
+        print("%s is the winner!" %winners[board[0][0]])
         return True
 
-    if board[2][0] == board[1][1] == board[0][2] in winners:
-        print("%s is the winner!" %winners[board[0][2]])
-        return True    
+    if board[2][0] == board[1][1] == board[0][2] and board[2][0] in winners:
+        print("%s is the winner!" %winners[board[2][0]])
+        return True
     return False
 
 
 # Asking for names and choosing order
 def name_and_order():
     while True:
-        try:
-            choice = input("\n> If you want to decide who makes the move, press 1, if not, press 2: ").lower()         
-            if choice == "2":
-                name1 = input("\nFirst player name: ")
-                name2 = input("Second player name: ")
-                if name1 == name2:
-                    print("> Please, enter two different names to avoid confusion.")
-                    continue
-                crosses_player = random.choice((name1, name2))
-                noughts_player = name1 if crosses_player == name2 else name2
-                return crosses_player, noughts_player
-
-            elif choice == "1":
-                """Some parts of the code here are repeated from the previous if statement, they could be put in a function [n]"""
-                crosses_player = input("\nCrosses player name: ")
-                noughts_player = input("Noughts player name: ")
-                if crosses_player == noughts_player:
-                    print("> Please, enter two different names to avoid confusion.")
-                    """Continue jumps to the next loop, thus executing all of the above code [s]"""
-                    continue
-                return crosses_player, noughts_player
-            
-            else:
-                raise ValueError
-        
-        except ValueError:
+        choice = input("\n> If you want to decide who makes the move, press 1, if not, press 2: ").lower()
+        if choice not in ("1", "2"):
             print("\n> Make sure you spell your answer correctly!")
+            continue
+
+        if choice == "2":
+            name1 = input("\nFirst player name: ")
+            name2 = input("Second player name: ")
+            if name1 == name2:
+                print("> Please, enter two different names to avoid confusion.")
+                continue
+            crosses_player = random.choice((name1, name2))
+            noughts_player = name1 if crosses_player == name2 else name2
+            return crosses_player, noughts_player
+
+        else:
+            """Some parts of the code here are repeated from the previous if statement, they could be put in a function [n]"""
+            crosses_player = input("\nCrosses player name: ")
+            noughts_player = input("Noughts player name: ")
+            if crosses_player == noughts_player:
+                print("> Please, enter two different names to avoid confusion.")
+                """Continue jumps to the next loop, thus executing all of the above code [s]"""
+                continue
+            return crosses_player, noughts_player
 
 
 # Selection of board squares
@@ -147,95 +131,78 @@ def play_again():
 
 # Main game loop
 while True:
-    """vague variable names, does it even need to be a separate variable? [n]"""
-    text2 = """
-    > You can play this game with a friend (press 1) or the computer (press 2). It's up to you 😉
-    Who do you want to play with? 
-    """
-    print(text2)
-    
-    try:
-        board = clear_board()
-        """does it really have to be a separate variable? the board itself already stores this information, you just need to retrieve it [s]"""
-        available_moves = 9
-        """
-        try / except should be as small as possible to only handle the part they are concerned about, this whole huge try / except statement
-        should only really cover this single line [S]
-        """
-        choice = int(input("> I choose option number: "))
+    print("> You can play this game with a friend (press 1) or the computer (press 2). It's up to you 😉\n  Who do you want to play with?")
+    board = clear_board()
+    """does it really have to be a separate variable? the board itself already stores this information, you just need to retrieve it [s]"""
+    available_moves = 9
 
-        # playing with a friend
-        """you put the user selection of name and order in a separate function, why put the choice of gamemode in the main loop? [s]"""
-        if choice == 1:
-            crosses_player, noughts_player = name_and_order()
-            print("\n> Look, this is your board:")
-            display_board(board)
-
-            while True:
-                move(crosses_player, "", "X")
-                available_moves -= 1
-
-                if who_is_the_winner(board):
-                    break
-                elif available_moves == 0:
-                    print("It's a draw!")
-                    break
-
-                move(noughts_player, "", "O")
-                available_moves -= 1
-
-                if who_is_the_winner(board):
-                    break
-
-        # playing with the computer
-        elif choice == 2:
-            while True:
-                player_name = input("\nWhat's your name? ")
-                """computer_name is a constant"""
-                computer_name = "Computer"
-                if player_name == computer_name:
-                    print("> Please, enter two different names to avoid confusion.")
-                    continue
-
-                crosses_player = random.choice((player_name, computer_name))
-                noughts_player = player_name if crosses_player == computer_name else computer_name
-                break
-            
-            text3 = """> Great, you chose a computer as your opponent!
-                         This is your board: 
-                    """
-            print(text3)
-            display_board(board)
-
-            while True:
-                """you are checking which player is playing as what symbol every turn [s]"""
-                if crosses_player == computer_name:
-                    move("", computer_name, "X")
-                else:
-                    move(crosses_player, "", "X")
-                available_moves -= 1
-
-                if who_is_the_winner(board):
-                    break
-                elif available_moves == 0:
-                    print("It's a draw!")
-                    break
-
-                if noughts_player == computer_name:
-                    move("", computer_name, "O")
-                else:
-                    move(noughts_player, "", "O")
-                available_moves -= 1
-            
-                if who_is_the_winner(board):
-                    break
-
-        else:
-            raise ValueError
-
-    except ValueError:
+    choice = input("> I choose option number: ")
+    if choice not in ("1", "2"):
         print("> Oops, make sure you chose the right number!")
         continue
+
+    # playing with a friend
+    """you put the user selection of name and order in a separate function, why put the choice of gamemode in the main loop? [s]"""
+    if choice == "1":
+        crosses_player, noughts_player = name_and_order()
+        print("\n> Look, this is your board:")
+        display_board(board)
+
+        while True:
+            move(crosses_player, "", "X")
+            available_moves -= 1
+
+            if who_is_the_winner(board):
+                break
+            elif available_moves == 0:
+                print("It's a draw!")
+                break
+
+            move(noughts_player, "", "O")
+            available_moves -= 1
+
+            if who_is_the_winner(board):
+                break
+
+    # playing with the computer
+    else:
+        while True:
+            player_name = input("\nWhat's your name? ")
+            """computer_name is a constant"""
+            computer_name = "Computer"
+            if player_name == computer_name:
+                print("> Please, enter two different names to avoid confusion.")
+                continue
+
+            crosses_player = random.choice((player_name, computer_name))
+            noughts_player = player_name if crosses_player == computer_name else computer_name
+            break
+        
+        print("\n> Great, you chose a computer as your opponent!\n  This is your board:")
+        display_board(board)
+
+        while True:
+            """you are checking which player is playing as what symbol every turn [s]"""
+            if crosses_player == computer_name:
+                move("", computer_name, "X")
+            else:
+                move(crosses_player, "", "X")
+            available_moves -= 1
+
+            if who_is_the_winner(board):
+                break
+            elif available_moves == 0:
+                print("It's a draw!")
+                break
+
+            if noughts_player == computer_name:
+                move("", computer_name, "O")
+            else:
+                move(noughts_player, "", "O")
+            available_moves -= 1
+        
+            if who_is_the_winner(board):
+                break
 
     if not play_again():
         break
