@@ -55,7 +55,17 @@ def who_is_the_winner(board):
     return False
 
 
-# Asking for names and choosing order
+# Asking for names
+def get_names(first_prompt, second_prompt):
+    while True:
+        player_one = input(first_prompt)
+        player_two = input(second_prompt)
+        if player_one != player_two:
+            return player_one, player_two
+        print("> Please, enter two different names to avoid confusion.")
+
+
+# Choosing order
 def name_and_order():
     while True:
         choice = input("\n> If you want to decide who makes the move, press 1, if not, press 2: ").lower()
@@ -64,23 +74,13 @@ def name_and_order():
             continue
 
         if choice == "2":
-            name1 = input("\nFirst player name: ")
-            name2 = input("Second player name: ")
-            if name1 == name2:
-                print("> Please, enter two different names to avoid confusion.")
-                continue
+            name1, name2 = get_names("\nFirst player name: ", "Second player name: ")
             crosses_player = random.choice((name1, name2))
             noughts_player = name1 if crosses_player == name2 else name2
             return crosses_player, noughts_player
 
         else:
-            """Some parts of the code here are repeated from the previous if statement, they could be put in a function [n]"""
-            crosses_player = input("\nCrosses player name: ")
-            noughts_player = input("Noughts player name: ")
-            if crosses_player == noughts_player:
-                print("> Please, enter two different names to avoid confusion.")
-                """Continue jumps to the next loop, thus executing all of the above code [s]"""
-                continue
+            crosses_player, noughts_player = get_names("\nCrosses player name: ", "Noughts player name: ")
             return crosses_player, noughts_player
 
 
