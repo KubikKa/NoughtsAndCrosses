@@ -84,38 +84,46 @@ def name_and_order():
             return crosses_player, noughts_player
 
 
-# Selection of board squares
-"""This function is too broad. it combines handling input, validating it, board updates, display and logic (bad separation of concerns) [m]"""
-def move(player_name, computer_name, symbol):
+def player_move(player_name, symbol):
     while True:
+        print("\n> %s (%s), it's your turn!" %(player_name, symbol))
         try:
-            if player_name:
-                """smart use of truthyness / falsyness [+]"""
-                """if the symbol:name dict was a variable in the higher namespace it could be used here [n]"""
-                print("\n> %s (%s), it's your turn!" %(player_name, symbol))
-                square = int(input("> I'll choose number: "))
-            else:
-                """
-                could be optimised, the computer will be calling this over and over again repeating the whole loop
-                until it finds an empty value [s]"""
-                square = random.randint(1, 9)
-                
+            square = int(input("> I'll choose number: "))
+
             row, column = get_coordinates(square)
 
-            if board[row][column] == "X" or board[row][column] == "O":
-                if player_name:
-                    print("\n> This square is already occupied! Please, choose another one.")
-                """...we are checking if it's players or computers turn every time a player makes a wrong move [n]"""
+            if board[row][column] in ("X", "O"):
+                print("\n> This square is already occupied! Please, choose another one.")
                 continue
-            else:
-                if computer_name:
-                    print("\n🖥️  Computer chose square number %s." %(square))
-                board[row][column] = symbol   
-                display_board(board)
-                break
-        except:
-            """broad exception again [n]"""
+
+        except (KeyError, ValueError):
             print("\n> There is no square with this number! Please try again and select number from 1-9.")
+            continue
+        
+        return row, column
+    
+
+def computer_move():
+    while True:
+        square = random.randint(1, 9)
+        row, column = get_coordinates(square)
+
+        if board[row][column] in ("X", "O"):
+            continue
+
+        print("\n🖥️  Computer chose square number %s." %(square))
+        return row, column
+
+
+# Selection of board squares
+def move(player_name, symbol):
+    if player_name:
+        row, column = player_move(player_name, symbol)
+    else:
+        row, column = computer_move()
+
+    board[row][column] = symbol    
+    display_board(board)
 
 
 # Choose whether you want to play again
@@ -149,7 +157,7 @@ while True:
         display_board(board)
 
         while True:
-            move(crosses_player, "", "X")
+            move(crosses_player, "X")
             available_moves -= 1
 
             if who_is_the_winner(board):
@@ -158,7 +166,7 @@ while True:
                 print("It's a draw!")
                 break
 
-            move(noughts_player, "", "O")
+            move(noughts_player, "O")
             available_moves -= 1
 
             if who_is_the_winner(board):
@@ -184,9 +192,9 @@ while True:
         while True:
             """you are checking which player is playing as what symbol every turn [s]"""
             if crosses_player == computer_name:
-                move("", computer_name, "X")
+                move(None, "X")
             else:
-                move(crosses_player, "", "X")
+                move(crosses_player, "X")
             available_moves -= 1
 
             if who_is_the_winner(board):
@@ -196,9 +204,9 @@ while True:
                 break
 
             if noughts_player == computer_name:
-                move("", computer_name, "O")
+                move(None, "O")
             else:
-                move(noughts_player, "", "O")
+                move(noughts_player, "O")
             available_moves -= 1
         
             if who_is_the_winner(board):
