@@ -8,15 +8,13 @@ def clear_board():
 
 
 # Display the current board
-"""a bit repetitive, could be put in a loop. You can use \n instead of printing black lines [n]"""
 def display_board(board):
-    print("")
-    print(" " + board[0][0] + " | " + board[0][1] + " | " + board[0][2] + " ")
-    print("---.---.---")
-    print(" " + board[1][0] + " | " + board[1][1] + " | " + board[1][2] + " ")
-    print("---.---.---")
-    print(" " + board[2][0] + " | " + board[2][1] + " | " + board[2][2] + " ")
-    print("")
+    print()
+    for i in range(3):
+        print(" " + board[i][0] + " | " + board[i][1] + " | " + board[i][2] + " ")
+        if i < 2:
+            print("---.---.---")
+    print()
 
 
 # Changing coordinates of the board's squares into simple numbers
@@ -218,6 +216,5 @@ while True:
 
 """"
 2. za dużo używania globalnych zmiennych w funkcjach. jest to niebezpieczne. Lepiej przekazywać je funkcjom jako argumenty
-
 guard clauses
 """
