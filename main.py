@@ -1,13 +1,13 @@
 import random
 
 
-# Board for 'Noughts and crosses' game
+# Initialises and returns a fresh 3x3 board
 def clear_board():
     board = [["1","2","3"],["4","5","6"],["7","8","9"]]
     return board
 
 
-# Display the current board
+# Renders the current state of board to the console for the player
 def display_board(board):
     print()
     for i in range(3):
@@ -17,8 +17,7 @@ def display_board(board):
     print()
 
 
-# Changing coordinates of the board's squares into simple numbers
-"""is this function even needed? [s]"""
+# Converts a square number to its corresponding indices on the board
 def get_coordinates(square):
     numbers = {
         1: [0,0], 2: [0,1], 3: [0,2], 
@@ -28,8 +27,9 @@ def get_coordinates(square):
     return numbers[square]
 
 
-# Winning conditions
-def who_is_the_winner(board):
+# Checks the current board for winning condition. 
+# If a player has won, returns True and announces the winner; otherwise, returns False
+def who_is_the_winner(board, crosses_player, noughts_player):
     winners = {"X": crosses_player, "O": noughts_player}
 
     for i in range(3):
@@ -53,7 +53,7 @@ def who_is_the_winner(board):
     return False
 
 
-# Asking for names
+# Retrives player's names, ensuring they are distinct
 def get_names(first_prompt, second_prompt):
     while True:
         player_one = input(first_prompt)
@@ -63,7 +63,7 @@ def get_names(first_prompt, second_prompt):
         print("> Please, enter two different names to avoid confusion.")
 
 
-# Choosing order
+# Determines which player uses "X" and which uses "O" based on their choice or random assignment
 def name_and_order():
     while True:
         choice = input("\n> If you want to decide who makes the move, press 1, if not, press 2: ").lower()
@@ -82,7 +82,8 @@ def name_and_order():
             return crosses_player, noughts_player
 
 
-def player_move(player_name, symbol):
+# Handles the process of human player selecting a square
+def player_move(player_name, symbol, board):
     while True:
         print("\n> %s (%s), it's your turn!" %(player_name, symbol))
         try:
@@ -101,7 +102,8 @@ def player_move(player_name, symbol):
         return row, column
     
 
-def computer_move():
+# Selects a free square for computer's move by drawing an avaliable random number from the range 1-9
+def computer_move(board):
     while True:
         square = random.randint(1, 9)
         row, column = get_coordinates(square)
@@ -113,18 +115,18 @@ def computer_move():
         return row, column
 
 
-# Selection of board squares
-def move(player_name, symbol):
+# Places the player's or computer symbol on the board and updates the display
+def move(player_name, symbol, board):
     if player_name:
-        row, column = player_move(player_name, symbol)
+        row, column = player_move(player_name, symbol, board)
     else:
-        row, column = computer_move()
+        row, column = computer_move(board)
 
     board[row][column] = symbol    
     display_board(board)
 
 
-# Choose whether you want to play again
+# Prompts the user to decide whether to start a new game
 def play_again():
     while True:
         restart_decision = input("\n> Do you want to play again? (Answer Y/N): ").lower()
@@ -135,46 +137,23 @@ def play_again():
         print("> Make sure you spell your answer correctly!")
 
 
-# Main game loop
-while True:
-    print("> You can play this game with a friend (press 1) or the computer (press 2). It's up to you 😉\n  Who do you want to play with?")
-    board = clear_board()
-    """does it really have to be a separate variable? the board itself already stores this information, you just need to retrieve it [s]"""
-    available_moves = 9
-
-    choice = input("> I choose option number: ")
-    if choice not in ("1", "2"):
+# Prompts the user to choose between playing against another person or the computer
+def get_game_mode():
+    while True:
+        print("> You can play this game with a friend (press 1) or the computer (press 2). It's up to you 😉\n  Who do you want to play with?")
+        mode = input("> I choose option number: ")
+        if mode in ("1", "2"):
+            return mode
         print("> Oops, make sure you chose the right number!")
-        continue
+        
 
-    # playing with a friend
-    """you put the user selection of name and order in a separate function, why put the choice of gamemode in the main loop? [s]"""
-    if choice == "1":
-        crosses_player, noughts_player = name_and_order()
-        print("\n> Look, this is your board:")
-        display_board(board)
-
-        while True:
-            move(crosses_player, "X")
-            available_moves -= 1
-
-            if who_is_the_winner(board):
-                break
-            elif available_moves == 0:
-                print("It's a draw!")
-                break
-
-            move(noughts_player, "O")
-            available_moves -= 1
-
-            if who_is_the_winner(board):
-                break
-
-    # playing with the computer
+# Sets players names and assings symbols depending on the selected game mode
+def select_opponents(mode):
+    if mode == "1":
+        return name_and_order()
     else:
         while True:
             player_name = input("\nWhat's your name? ")
-            """computer_name is a constant"""
             computer_name = "Computer"
             if player_name == computer_name:
                 print("> Please, enter two different names to avoid confusion.")
@@ -182,39 +161,58 @@ while True:
 
             crosses_player = random.choice((player_name, computer_name))
             noughts_player = player_name if crosses_player == computer_name else computer_name
-            break
-        
-        print("\n> Great, you chose a computer as your opponent!\n  This is your board:")
-        display_board(board)
+            return crosses_player, noughts_player
 
+
+# ---------- MAIN GAME LOOP ----------
+while True:
+    board = clear_board()
+    available_moves = 9
+
+    game_mode = get_game_mode()
+    crosses_player, noughts_player = select_opponents(game_mode)
+
+    print("\n> Look, this is your board:")
+    display_board(board)
+
+    # Handle gameplay where both players are human
+    if game_mode == "1":
         while True:
-            """you are checking which player is playing as what symbol every turn [s]"""
-            if crosses_player == computer_name:
-                move(None, "X")
-            else:
-                move(crosses_player, "X")
+            move(crosses_player, "X", board)
             available_moves -= 1
 
-            if who_is_the_winner(board):
+            if who_is_the_winner(board, crosses_player, noughts_player):
                 break
             elif available_moves == 0:
                 print("It's a draw!")
                 break
 
-            if noughts_player == computer_name:
-                move(None, "O")
-            else:
-                move(noughts_player, "O")
+            move(noughts_player, "O", board)
+            available_moves -= 1
+
+            if who_is_the_winner(board, crosses_player, noughts_player):
+                break
+
+    # Handle gameplay against the computer 
+    else:
+        computer_name = "Computer"
+        x_move = (lambda: move(None, "X", board) if crosses_player == computer_name else move(crosses_player, "X", board))
+        o_move = (lambda: move(None, "O", board) if noughts_player == computer_name else move(noughts_player, "O", board))
+        while True:
+            x_move()
+            available_moves -= 1
+
+            if who_is_the_winner(board, crosses_player, noughts_player):
+                break
+            elif available_moves == 0:
+                print("It's a draw!")
+                break
+
+            o_move()
             available_moves -= 1
         
-            if who_is_the_winner(board):
+            if who_is_the_winner(board, crosses_player, noughts_player):
                 break
 
     if not play_again():
         break
-
-
-""""
-2. za dużo używania globalnych zmiennych w funkcjach. jest to niebezpieczne. Lepiej przekazywać je funkcjom jako argumenty
-guard clauses
-"""
