@@ -148,7 +148,7 @@ def get_game_mode():
         
 
 # Sets players names and assings symbols depending on the selected game mode
-def select_opponents(mode):
+def setup_players(mode):
     if mode == "1":
         return name_and_order()
     else:
@@ -164,55 +164,42 @@ def select_opponents(mode):
             return crosses_player, noughts_player
 
 
+# Assigns player depending on the selected game mode
+# Returns player's name unless mode 2 is selected and it's the Computer's turn
+def get_player_for_turn(mode, name):
+    if mode == "2" and name == "Computer":
+        return None
+    else:
+        return name
+
+
 # ---------- MAIN GAME LOOP ----------
 while True:
     board = clear_board()
     available_moves = 9
 
     game_mode = get_game_mode()
-    crosses_player, noughts_player = select_opponents(game_mode)
+    crosses_player, noughts_player = setup_players(game_mode)
 
     print("\n> Look, this is your board:")
     display_board(board)
 
-    # Handle gameplay where both players are human
-    if game_mode == "1":
-        while True:
-            move(crosses_player, "X", board)
-            available_moves -= 1
+    # Handle gameplay
+    while True:
+        move(get_player_for_turn(game_mode, crosses_player), "X", board)
+        available_moves -= 1
 
-            if who_is_the_winner(board, crosses_player, noughts_player):
-                break
-            elif available_moves == 0:
-                print("It's a draw!")
-                break
+        if who_is_the_winner(board, crosses_player, noughts_player):
+            break
+        elif available_moves == 0:
+            print("It's a draw!")
+            break
 
-            move(noughts_player, "O", board)
-            available_moves -= 1
+        move(get_player_for_turn(game_mode, noughts_player), "O", board)
+        available_moves -= 1
 
-            if who_is_the_winner(board, crosses_player, noughts_player):
-                break
-
-    # Handle gameplay against the computer 
-    else:
-        computer_name = "Computer"
-        x_move = (lambda: move(None, "X", board) if crosses_player == computer_name else move(crosses_player, "X", board))
-        o_move = (lambda: move(None, "O", board) if noughts_player == computer_name else move(noughts_player, "O", board))
-        while True:
-            x_move()
-            available_moves -= 1
-
-            if who_is_the_winner(board, crosses_player, noughts_player):
-                break
-            elif available_moves == 0:
-                print("It's a draw!")
-                break
-
-            o_move()
-            available_moves -= 1
-        
-            if who_is_the_winner(board, crosses_player, noughts_player):
-                break
+        if who_is_the_winner(board, crosses_player, noughts_player):
+            break
 
     if not play_again():
         break
