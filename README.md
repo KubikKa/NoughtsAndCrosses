@@ -11,7 +11,7 @@ Hi! This is a game called 'Noughts and crosses'.
 
 # To-Do List:
 ## Short term:
-* Resolve minor issues and bugs
+* 
 
 ## Medium/Long term:
 * Add the option to play against AI

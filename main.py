@@ -53,14 +53,20 @@ def who_is_the_winner(board, crosses_player, noughts_player):
     return False
 
 
-# Retrives player's names, ensuring they are distinct
+# Retrives player's names, ensuring they are distinct and not empty
 def get_names(first_prompt, second_prompt):
     while True:
-        player_one = input(first_prompt)
-        player_two = input(second_prompt)
-        if player_one != player_two:
-            return player_one, player_two
-        print("> Please, enter two different names to avoid confusion.")
+        player_one = input(first_prompt).strip()
+        player_two = input(second_prompt).strip()
+
+        if player_one == player_two:
+            print("> Please, enter two different names to avoid confusion.")
+            continue
+        if not player_one or not player_two:
+            print("Names cannot be empty. Please, enter valid names.")
+            continue
+
+        return player_one, player_two
 
 
 # Determines which player uses "X" and which uses "O" based on their choice or random assignment
@@ -153,10 +159,14 @@ def setup_players(mode):
         return name_and_order()
     else:
         while True:
-            player_name = input("\nWhat's your name? ")
+            player_name = input("\nWhat's your name? ").strip()
             computer_name = "Computer"
+
             if player_name == computer_name:
                 print("> Please, enter two different names to avoid confusion.")
+                continue
+            if not player_name:
+                print("Name cannot be empty. Please, enter your name.")
                 continue
 
             crosses_player = random.choice((player_name, computer_name))
