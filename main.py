@@ -13,7 +13,7 @@ def display_board(board):
     for i in range(3):
         print(" " + board[i][0] + " | " + board[i][1] + " | " + board[i][2] + " ")
         if i < 2:
-            print("---.---.---")
+            print("---+---+---")
     print()
 
 
@@ -35,20 +35,20 @@ def who_is_the_winner(board, crosses_player, noughts_player):
     for i in range(3):
         # checking rows
         if board[i][0] == board[i][1] == board[i][2] and board[i][0] in winners:
-            print("%s is the winner!" %winners[board[i][0]])
+            print(f"{winners[board[i][0]]} is the winner!")
             return True
-        #checking columns
+        # checking columns
         if board[0][i] == board[1][i] == board[2][i] and board[0][i] in winners:
-            print("%s is the winner!" %winners[board[0][i]])
+            print(f"{winners[board[0][i]]} is the winner!")
             return True
     
     # checking diagonals
     if board[0][0] == board[1][1] == board[2][2] and board[0][0] in winners:
-        print("%s is the winner!" %winners[board[0][0]])
+        print(f"{winners[board[0][0]]} is the winner!")
         return True
 
     if board[2][0] == board[1][1] == board[0][2] and board[2][0] in winners:
-        print("%s is the winner!" %winners[board[2][0]])
+        print(f"{winners[board[2][0]]} is the winner!")
         return True
     return False
 
@@ -91,10 +91,9 @@ def name_and_order():
 # Handles the process of human player selecting a square
 def player_move(player_name, symbol, board):
     while True:
-        print("\n> %s (%s), it's your turn!" %(player_name, symbol))
+        print(f"\n> {player_name} ({symbol}), it's your turn!")
         try:
             square = int(input("> I'll choose number: "))
-
             row, column = get_coordinates(square)
 
             if board[row][column] in ("X", "O"):
@@ -111,13 +110,10 @@ def player_move(player_name, symbol, board):
 # Selects a free square for computer's move by drawing an avaliable random number from the range 1-9
 def computer_move(board):
     while True:
-        square = random.randint(1, 9)
+        free_squares = [i for i in range(1, 10) if board[get_coordinates(i)[0]][get_coordinates(i)[1]] not in ("X", "O")]
+        square = random.choice(free_squares)
         row, column = get_coordinates(square)
-
-        if board[row][column] in ("X", "O"):
-            continue
-
-        print("\n🖥️  Computer chose square number %s." %(square))
+        print(f"\n🖥️  Computer chose square number {square}")
         return row, column
 
 
